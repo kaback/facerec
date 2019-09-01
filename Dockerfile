@@ -25,12 +25,13 @@ RUN apt-get install -y --fix-missing \
     python3-dev \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
-RUN python3 -m ensurepip --upgrade && pip3 install --upgrade picamera[array] dlib
+RUN CFLAGS=-std=c99 python3 -m ensurepip --upgrade && CFLAGS=-std=c99 pip3 install --upgrade picamera[array] dlib
 
 
 RUN git clone --single-branch https://github.com/ageitgey/face_recognition.git
 RUN cd /face_recognition && \
-    pip3 install -r requirements.txt && \
+    pip3 install Cython && \
+    pip3 install --no-build-isolation -r requirements.txt && \
     python3 setup.py install
 
 CMD cd /face_recognition/examples && \
